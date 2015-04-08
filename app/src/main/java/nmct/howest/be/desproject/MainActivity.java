@@ -65,12 +65,5 @@ public class MainActivity extends FragmentActivity implements RangeFragment.Rang
         Intent intent = new Intent(MainActivity.this, MapFriendsActivity.class);
         intent.putExtra(MapFriendsActivity.BEREIK, bereik);
         startActivity(intent);
-   /*     Fragment mMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.add(R.id.container, mMapFragment, "MapFriendsFragment");
-        fragmentTransaction.addToBackStack("RangeFragment");
-
-        fragmentTransaction.commit();*/
     }
 }
