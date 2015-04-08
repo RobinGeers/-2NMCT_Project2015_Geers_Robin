@@ -1,17 +1,24 @@
 package nmct.howest.be.desproject;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements RangeFragment.RangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new RangeFragment(), "RangeFragment")
+                    .commit();
+        }
     }
 
 
@@ -35,5 +42,21 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRange(int bereik) {
+        showMapFragment(bereik);
+    }
+
+    private void showMapFragment(int bereik) {
+        Fragment fragmentMap = MapFragment.newInstance(bereik);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        // Wat er ook getoond wordt op het scherm -> Vervang het door dit fragment
+        fragmentTransaction.replace(R.id.container, fragmentMap, "MapFragment");
+        fragmentTransaction.addToBackStack("RangeFragment");
+
+        fragmentTransaction.commit();
     }
 }
