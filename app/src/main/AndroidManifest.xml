@@ -2,6 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nmct.howest.be.desproject" >
 
+    <!-- Download map tiles van de Google Maps servers ! -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Staat API toe om te controleren of connectie ok is om data te downloaden ! -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Staat API toe om map tiles te cachen in externe opslagruimte ! -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Staat API toe om Wi-fi en 3G te gebruiken om locatie te bepalen ! -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Staat API toe om GPS te gebruiken om locatie te bepalen ! -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Gebruik OpenGL 2 om map te renderen ! -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +30,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDoc4mk3EEMSLimixWJYlD-Wybu8yrW2N4" />
+
+        <activity
+            android:name=".MapFriendsActivity"
+            android:label="@string/title_activity_map_friends" >
         </activity>
     </application>
 

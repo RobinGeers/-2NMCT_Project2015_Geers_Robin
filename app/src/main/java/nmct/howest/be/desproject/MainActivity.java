@@ -3,12 +3,20 @@ package nmct.howest.be.desproject;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends Activity implements RangeFragment.RangeListener {
+
+public class MainActivity extends FragmentActivity implements RangeFragment.RangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +27,10 @@ public class MainActivity extends Activity implements RangeFragment.RangeListene
                     .add(R.id.container, new RangeFragment(), "RangeFragment")
                     .commit();
         }
+
+        // Haal map op
+       /* MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);*/
     }
 
 
@@ -50,13 +62,15 @@ public class MainActivity extends Activity implements RangeFragment.RangeListene
     }
 
     private void showMapFragment(int bereik) {
-        Fragment fragmentMap = MapFragment.newInstance(bereik);
+        Intent intent = new Intent(MainActivity.this, MapFriendsActivity.class);
+        intent.putExtra(MapFriendsActivity.BEREIK, bereik);
+        startActivity(intent);
+   /*     Fragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-        // Wat er ook getoond wordt op het scherm -> Vervang het door dit fragment
-        fragmentTransaction.replace(R.id.container, fragmentMap, "MapFragment");
+        fragmentTransaction.add(R.id.container, mMapFragment, "MapFriendsFragment");
         fragmentTransaction.addToBackStack("RangeFragment");
 
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 }
