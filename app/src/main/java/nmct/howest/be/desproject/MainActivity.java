@@ -1,6 +1,5 @@
 package nmct.howest.be.desproject;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -9,14 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-
-public class MainActivity extends FragmentActivity implements RangeFragment.RangeListener {
+public class MainActivity extends FragmentActivity implements MainFragment.KotZoneListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +17,9 @@ public class MainActivity extends FragmentActivity implements RangeFragment.Rang
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new RangeFragment(), "RangeFragment")
+                    .add(R.id.container, new MainFragment(), "MainFragment")
                     .commit();
         }
-
-        // Haal map op
-       /* MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
     }
 
 
@@ -57,13 +46,29 @@ public class MainActivity extends FragmentActivity implements RangeFragment.Rang
     }
 
     @Override
-    public void onRange(int bereik) {
-        showMapFragment(bereik);
+    public void onKiesKot() {
+        showSelecteerKotFragment();
     }
 
-    private void showMapFragment(int bereik) {
-        Intent intent = new Intent(MainActivity.this, MapFriendsActivity.class);
-        intent.putExtra(MapFriendsActivity.BEREIK, bereik);
+    private void showSelecteerKotFragment() {
+        Fragment selecteerKotFragment = SelecteerKotFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.container, selecteerKotFragment);
+        fragmentTransaction.addToBackStack("MainFragment");
+
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onKotGekozen(String kotzone) {
+        showMapFragment(kotzone);
+    }
+
+
+    private void showMapFragment(String kotzone) {
+        Intent intent = new Intent(MainActivity.this, KotzonesActivity.class);
+        intent.putExtra(KotzonesActivity.KOTZONE, kotzone);
         startActivity(intent);
     }
 }

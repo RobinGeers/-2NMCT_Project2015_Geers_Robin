@@ -40,7 +40,7 @@
             android:value="AIzaSyDoc4mk3EEMSLimixWJYlD-Wybu8yrW2N4" />
 
         <activity
-            android:name=".MapFriendsActivity"
+            android:name=".KotzonesActivity"
             android:label="@string/title_activity_map_friends" >
         </activity>
     </application>

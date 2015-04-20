@@ -21,10 +21,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 
-public class MapFriendsActivity extends Activity implements OnMapReadyCallback {
+public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
     private TextView textViewResultaat, textViewLatitude, textViewLongtitude;
-    public static final String BEREIK = "nmct.howest.be.desproject.bereik";
+    public static final String KOTZONE = "nmct.howest.be.desproject.bereik";
     public static final LatLng DEINZE = new LatLng(50.988755, 3.5121499);
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -39,7 +39,7 @@ public class MapFriendsActivity extends Activity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_map_friends);
+        setContentView(R.layout.activity_kot_zones);
 
         textViewResultaat = (TextView) findViewById(R.id.textViewBereikResultaat);
         textViewLatitude = (TextView) findViewById(R.id.textViewLatitude);
@@ -47,13 +47,12 @@ public class MapFriendsActivity extends Activity implements OnMapReadyCallback {
 
         listLocations.add(0, coordinaten1);
         listLocations.add(1, coordinaten2);
-        //Log.d("ARRRRRRRRRRRAY", String.valueOf(listLocations.get(0)));
 
 
         // Haal gekozen bereik op
         Intent intent = getIntent();
-        int bereik = intent.getIntExtra(BEREIK, 30);
-        textViewResultaat.setText("Bereik: " + String.valueOf(bereik) + " km");
+        String kotzone = intent.getStringExtra(KOTZONE);
+        textViewResultaat.setText("Kotzone: " + String.valueOf(kotzone));
 
         // Maak instantie van Google Maps API
        // buildGoogleApiClient();
