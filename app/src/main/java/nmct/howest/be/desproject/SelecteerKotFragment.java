@@ -15,23 +15,34 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SelecteerKotFragment extends ListFragment {
-    private static String urlJSON = "http://datatank.gent.be/Onderwijs&Opvoeding/Kotzones.json";
+    final static String URL_JSON = "http://datatank.gent.be/Onderwijs&Opvoeding/Kotzones.json";
     private static final String COORDS = "Coordinates";
     private static final String ID = "Id";
     private static final String FID = "fid";
     private static final String KOTZONE = "Kotzone";
-    private Context context;
     ListView listView;
-    ArrayList<HashMap<String, String>> jsonList = new ArrayList<HashMap<String, String>>();
+    HttpClient client;
+    JSONObject json;
+    private TextView textViewTest;
 
     public SelecteerKotFragment() {
         // Required empty public constructor
@@ -45,51 +56,54 @@ public class SelecteerKotFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewKotzones = inflater.inflate(R.layout.fragment_selecteer_kot, container, false);
-        new ProgressTask(SelecteerKotFragment.this).execute();
+
+        listView = (ListView) viewKotzones.findViewById(android.R.id.list);
+        textViewTest = (TextView) viewKotzones.findViewById(R.id.textViewTest);
+        client = new DefaultHttpClient();
+        new Read().execute("Kotzones");
         return viewKotzones;
     }
 
-    private class ProgressTask extends AsyncTask<String, Void, Boolean> {
+    public JSONObject getKotZone() throws ClientProtocolException, IOException, JSONException {
+        StringBuilder url = new StringBuilder(URL_JSON);
 
-        private ProgressDialog progressDialog;
-        private ListFragment listFragment;
+        HttpGet get = new HttpGet(url.toString());
+        HttpResponse response = client.execute(get);
+        int statusCode = response.getStatusLine().getStatusCode();
 
-        private ProgressTask(ListFragment listFragment) {
-            this.listFragment = listFragment;
+        if (statusCode == 200) { // Success
+            HttpEntity entity = response.getEntity();
+            String data = EntityUtils.toString(entity);
+            JSONArray kotZones = new JSONArray(data);
+            JSONObject kotzone = kotZones.getJSONObject(0);
+            return kotzone;
         }
+        else {
+            Toast.makeText(getActivity(), "Statuscode is not 200", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    public class Read extends AsyncTask<String, Integer, String> {
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            String[] arrProperties = new String[] { KOTZONE };
-            int[] arrViews = new int[] { R.id.textViewKotzone };
-
-            ListAdapter adapter = new SimpleAdapter(context, jsonList, R.layout.row_kotzone, arrProperties, arrViews);
-            setListAdapter(adapter);
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            JSONParser jsonParser = new JSONParser();
-            JSONArray json = jsonParser.getJSONFromUrl(urlJSON);
-
-            for (int i = 0; i < json.length(); i++) {
-                try {
-                    JSONObject obj = json.getJSONObject(i);
-                    String kotZone = obj.getString(KOTZONE);
-
-                    HashMap<String, String> map = new HashMap<String, String>();
-
-                    // Hang property aan Hashmap Key & Value
-                    map.put(KOTZONE, kotZone);
-
-                    // Voeg hashmap toe aan lijst
-                    jsonList.add(map);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+        protected String doInBackground(String... strings) {
+            try {
+                json = getKotZone();
+                return json.getString(strings[0]); // "coords"
+                // Roept methode onpostExecute op
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            textViewTest.setText(s);
         }
     }
 }

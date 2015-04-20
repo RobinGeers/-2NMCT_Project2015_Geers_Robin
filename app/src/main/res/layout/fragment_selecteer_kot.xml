@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
@@ -7,10 +7,20 @@
     <!-- Moet @android:id/list hebben om een textView en ListView in hetzelfde fragment te tonen !-->
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="209dp"
         android:id="@android:id/list"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_marginTop="26dp"
         android:layout_alignParentBottom="true"/>
-</FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textViewTest"
+        android:textSize="25sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"/>
+</RelativeLayout>
