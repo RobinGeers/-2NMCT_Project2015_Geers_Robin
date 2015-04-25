@@ -23,18 +23,16 @@ import java.util.ArrayList;
 
 public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
-    private TextView textViewResultaat, textViewLatitude, textViewLongtitude;
+    private TextView textViewResultaat;
     public static final String[] KOTZONE = new String[2];
     public static final String EXTRA_ARRAY_GEKOZEN_KOTZONE = "";
-    public static final LatLng DEINZE = new LatLng(50.988755, 3.5121499);
+    public static LatLng KOTZONE_LOCATIE = new LatLng(51.05434, 3.71742);
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mCurrentLocation;
     public LocationRequest mLocationRequest;
     private boolean mRequestingLocationUpdates = true;
-    private ArrayList<double[]> listLocations = new ArrayList<>();
-    double[] coordinaten1 = {1, 2};
-    double[] coordinaten2 = {3, 4};
+    private ArrayList<double[]> listKotenLocaties = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,27 +40,46 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
         setContentView(R.layout.activity_kot_zones);
 
+        // Koppel attribuut aan Control-View
         textViewResultaat = (TextView) findViewById(R.id.textViewBereikResultaat);
-        textViewLatitude = (TextView) findViewById(R.id.textViewLatitude);
-        textViewLongtitude = (TextView) findViewById(R.id.textViewLongtitude);
-
-        listLocations.add(0, coordinaten1);
-        listLocations.add(1, coordinaten2);
-
 
         // Haal gekozen kotzone op
-        //Intent intent = getIntent();
         Bundle args = this.getIntent().getExtras();
         String[] gekozenKotzone = args.getStringArray(EXTRA_ARRAY_GEKOZEN_KOTZONE);
 
+        // Vul properties in variabelen
         String kotZoneId = gekozenKotzone[0];
         String kotzoneCoordinaten = gekozenKotzone[1];
         String kotzoneNaam = gekozenKotzone[2];
-        textViewResultaat.setText("Kotzone: " + kotzoneNaam);
 
-        // Maak instantie van Google Maps API
-        // buildGoogleApiClient();
-        // createLocationRequest();
+        // Splits coordinaten en vul ze in een lijst
+        String[] coordinatenGesplitst = kotzoneCoordinaten.split(",0");
+        int coordinatenCount = coordinatenGesplitst.length;
+
+        for (int i = 0; i < coordinatenCount -1; i++) {
+            String[] coordinaten = kotzoneCoordinaten.split(",0");
+            String coordinaat = coordinaten[i];
+
+            String[] coordinaatGesplitst = coordinaat.split(",");
+            String latitude = coordinaatGesplitst[0];
+            String longitude = coordinaatGesplitst[1];
+
+            double dLatidude = Double.parseDouble(coordinaatGesplitst[1]);
+            double dLongitude = Double.parseDouble(coordinaatGesplitst[0]);
+
+            double[] beideCoordinaten = new double[] {
+                    dLatidude, dLongitude
+            };
+            listKotenLocaties.add(beideCoordinaten);
+        }
+
+        double latitude = listKotenLocaties.get(0)[0];
+        double longitude = listKotenLocaties.get(0)[1];
+
+        KOTZONE_LOCATIE = new LatLng(latitude, longitude);
+
+        // Toon properties van kotzone
+        textViewResultaat.setText("Kotzone: " + kotzoneNaam);
 
         // Haal map op
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -95,16 +112,15 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.addMarker(new MarkerOptions()
-                .position(DEINZE)
+                .position(KOTZONE_LOCATIE)
                 .title("U bevindt zich hier."));
 
         // Al de coördinaten die in de Arraylist zitten krijgen een marker toegewezen
-        // TODO: Profielfoto van swarm vrienden tonen op de Marker!
-        for (int i = 0; i < listLocations.size(); i++) {
-            LatLng pos = new LatLng(listLocations.get(i)[0], listLocations.get(i)[1]);
+        for (int i = 0; i < listKotenLocaties.size(); i++) {
+            LatLng pos = new LatLng(listKotenLocaties.get(i)[0], listKotenLocaties.get(i)[1]);
             googleMap.addMarker(new MarkerOptions()
                     .position(pos)
-                    .title("Latitude: " + String.valueOf(listLocations.get(i)[0] + "Longtitude: " + listLocations.get(i)[1])));
+                    .title("Latitude: " + String.valueOf(listKotenLocaties.get(i)[0] + "Longtitude: " + listKotenLocaties.get(i)[1])));
         }
 
         // Instellingen van de map
@@ -113,7 +129,7 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         settings.setMyLocationButtonEnabled(true);
 
         // Zoom in met de camera
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEINZE, 5));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(KOTZONE_LOCATIE, 5));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
     }
 }

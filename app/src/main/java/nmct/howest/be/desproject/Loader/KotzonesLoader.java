@@ -19,9 +19,6 @@ import java.util.List;
 
 import nmct.howest.be.desproject.Kotzone;
 
-/**
- * Created by robin_000 on 25/04/2015.
- */
 public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
 
     private Cursor mCursor;
@@ -121,7 +118,7 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
                                         reader.skipValue();
                                     }
                                     // Controleer of de 3 waarden ingevuld zijn -> Valid object
-                                    if (id != 0 && !coordinaten.equals("") && !kotzoneNaam.equals("")) {
+                                    if (id != 0 && !coordinaten.equals("") && !kotzoneNaam.equals("") && !coordinaten.equals(null) && !kotzoneNaam.equals(null)) {
                                         // Voeg de properties toe aan een object 'Kotzone' -> Voeg object toe aan lijst
                                         String[] kotzone = new String[] {
                                                 String.valueOf(id), coordinaten, kotzoneNaam

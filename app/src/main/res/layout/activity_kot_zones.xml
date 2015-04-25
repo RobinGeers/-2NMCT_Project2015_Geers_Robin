@@ -35,22 +35,4 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Latitude:"
-        android:id="@+id/textViewLatitude"
-        android:layout_above="@+id/relativeLayout"
-        android:layout_toEndOf="@+id/textViewBereikResultaat"
-        android:layout_marginStart="61dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longtitude"
-        android:id="@+id/textViewLongtitude"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/textViewLatitude"
-        android:layout_marginStart="61dp"/>
-
 </RelativeLayout>
