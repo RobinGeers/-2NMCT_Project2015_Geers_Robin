@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,6 +29,10 @@ import java.io.IOException;
 
 
 public class MainActivity extends FragmentActivity implements MainFragment.KotZoneListener, SelecteerKotFragment.SelecteerKotzoneListener {
+
+    private final int REQUEST_CODE_POSITION = 1;
+    public static final String GESELECTEERD_KOT_LATITUDE = "nmct.howest.be.desproject.latitude";
+    public static final String GESELECTEERD_KOT_LONGITUDE = "nmct.howest.be.desproject.longitude";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +93,36 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
         args.putStringArray(KotzonesActivity.EXTRA_ARRAY_GEKOZEN_KOTZONE, kotzone);
         Intent intent = new Intent(MainActivity.this, KotzonesActivity.class);
         intent.putExtras(args);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_POSITION);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        // Controleer op welke vraag (request) we een antwoord hebben gekregen
+        switch (requestCode) {
+            case REQUEST_CODE_POSITION:
+                switch (resultCode) {// Welk antwoord (result) hebben we gekregen?
+                    case RESULT_CANCELED: Toast.makeText(MainActivity.this, "Er was geen kot geselecteerd", Toast.LENGTH_SHORT).show();
+                        break;
+                    case RESULT_OK:
+                        double latitude = data.getDoubleExtra(GESELECTEERD_KOT_LATITUDE, 0);
+                        double longitude = data.getDoubleExtra(GESELECTEERD_KOT_LONGITUDE, 0);
+                        showKotzoneDetailsFragment(latitude, longitude);
+                        break;
+                }
+                break;
+        }
+    }
+
+    private void showKotzoneDetailsFragment(double latitude, double longitude) {
+        Fragment detailsFragment = KotzoneDetailsFragment.newInstance(latitude, longitude);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.container, detailsFragment);
+        
+
+        fragmentTransaction.commit();
     }
 
     @Override
