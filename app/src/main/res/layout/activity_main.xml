@@ -10,13 +10,4 @@
                 android:id="@+id/container"
                 tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textViewJSON"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="50dp"/>
 </RelativeLayout>

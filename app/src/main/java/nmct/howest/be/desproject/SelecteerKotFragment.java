@@ -3,8 +3,11 @@ package nmct.howest.be.desproject;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,19 +37,84 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SelecteerKotFragment extends ListFragment {
-    final static String URL_JSON = "http://datatank.gent.be/Onderwijs&Opvoeding/Kotzones.json";
-    private static final String COORDS = "Coordinates";
-    private static final String ID = "Id";
-    private static final String FID = "fid";
-    private static final String KOTZONE = "Kotzone";
-    ListView listView;
-    HttpClient client;
-    JSONObject json;
-    private TextView textViewTest;
+import nmct.howest.be.desproject.Loader.Contract;
+import nmct.howest.be.desproject.Loader.KotzonesLoader;
+
+public class SelecteerKotFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private TextView textViewKotzoneNaam;
+    private KotzonesAdapter mAdapter;
 
     public SelecteerKotFragment() {
         // Required empty public constructor
+    }
+
+    public class KotzonesAdapter extends SimpleCursorAdapter {
+
+        public KotzonesAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+            super(context, layout, c, from, to, flags);
+        }
+
+        @Override
+        public void bindView(View row, Context context, Cursor cursor) {
+            super.bindView(row, context, cursor);
+
+            ViewHolder holder = (ViewHolder) row.getTag();
+
+            if (holder == null) {
+                holder = new ViewHolder(row);
+                row.setTag(holder);
+            }
+
+            // Koppel attributen aan Control-View van Row!!!!
+            textViewKotzoneNaam = holder.textViewKotzoneNaam;
+        }
+
+        class ViewHolder {
+            public TextView textViewKotzoneNaam = null;
+
+            public ViewHolder(View row) {
+                this.textViewKotzoneNaam = (TextView) row.findViewById(R.id.textViewKotzoneNaam);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        String[] arrColumnNames = new String[] {
+                Contract.KotzonesColumns.COLUMN_KOTZONES_NAAM
+        };
+
+        int[] arrViews = new int[] {
+                R.id.textViewKotzoneNaam
+        };
+
+        // Koppel gegevens aan Adapter, koppel daarna Adapter aan ListView
+        mAdapter = new KotzonesAdapter(getActivity(), R.layout.row_kotzone, null, arrColumnNames, arrViews, 0);
+        setListAdapter(mAdapter);
+
+        // Data inladen via Loader
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new KotzonesLoader(getActivity());
+        // GEEN LOADINBACKGROUND GEBRUIKEN -> Anders is het niet Asynchroon
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        // Koppel cursor aan Adapter
+        mAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        // Ledig de Adapter
+        mAdapter.swapCursor(null);
     }
 
     public static SelecteerKotFragment newInstance() {
@@ -57,53 +126,6 @@ public class SelecteerKotFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewKotzones = inflater.inflate(R.layout.fragment_selecteer_kot, container, false);
 
-        listView = (ListView) viewKotzones.findViewById(android.R.id.list);
-        textViewTest = (TextView) viewKotzones.findViewById(R.id.textViewTest);
-        client = new DefaultHttpClient();
-        new Read().execute("Kotzones");
         return viewKotzones;
-    }
-
-    public JSONObject getKotZone() throws ClientProtocolException, IOException, JSONException {
-        StringBuilder url = new StringBuilder(URL_JSON);
-
-        HttpGet get = new HttpGet(url.toString());
-        HttpResponse response = client.execute(get);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode == 200) { // Success
-            HttpEntity entity = response.getEntity();
-            String data = EntityUtils.toString(entity);
-            JSONArray kotZones = new JSONArray(data);
-            JSONObject kotzone = kotZones.getJSONObject(0);
-            return kotzone;
-        }
-        else {
-            Toast.makeText(getActivity(), "Statuscode is not 200", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-    }
-
-    public class Read extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                json = getKotZone();
-                return json.getString(strings[0]); // "coords"
-                // Roept methode onpostExecute op
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            textViewTest.setText(s);
-        }
     }
 }

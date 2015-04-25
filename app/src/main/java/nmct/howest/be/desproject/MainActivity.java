@@ -28,70 +28,16 @@ import java.io.IOException;
 
 public class MainActivity extends FragmentActivity implements MainFragment.KotZoneListener {
 
-    private HttpClient httpClient;
-    final static String URL_JSON = "http://datatank.gent.be/Onderwijs&Opvoeding/Kotzones.json";
-    JSONObject json;
-    private TextView textViewJSON;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       /* if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new MainFragment(), "MainFragment")
                     .commit();
-        }*/
-        textViewJSON = (TextView) findViewById(R.id.textViewJSON);
-        httpClient = new DefaultHttpClient();
-        new Read().execute("Kotzones");
-    }
-
-    public JSONObject getKotZone() throws ClientProtocolException, IOException, JSONException {
-        StringBuilder url = new StringBuilder(URL_JSON);
-
-        HttpGet get = new HttpGet(url.toString());
-        HttpResponse response = httpClient.execute(get);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode == 200) { // Success
-            HttpEntity entity = response.getEntity();
-            String data = EntityUtils.toString(entity);
-            JSONObject kotZones = new JSONObject(data); // Opgehaalde json
-            for (int i = 0; i < kotZones.length(); i++) {
-            }
-
-            return kotZones;
-        }
-        else {
-            Toast.makeText(MainActivity.this, "Statuscode is not 200", Toast.LENGTH_SHORT).show();
-            return null;
         }
     }
-
-    public class Read extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                json = getKotZone();
-                return json.getString("Kotzones"); // "coords"
-                // Roept methode onpostExecute op
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            textViewJSON.setText(s);
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
