@@ -14,6 +14,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import nmct.howest.be.desproject.Kotzone;
 
 /**
  * Created by robin_000 on 25/04/2015.
@@ -21,10 +25,16 @@ import java.net.URL;
 public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
 
     private Cursor mCursor;
+    private static List<String[]> listKotzones;
     private String urlJSON = "http://datatank.gent.be/Onderwijs&Opvoeding/Kotzones.json";
 
     public KotzonesLoader(Context context) {
         super(context);
+    }
+
+    // Getter: Haalt de lijst op van Kotzones
+    public static List<String[]> getListKotzones() {
+        return listKotzones;
     }
 
     // Array van kolomnamen
@@ -35,7 +45,6 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
     };
 
     private static Object lock = new Object();
-
 
     @Override
     protected void onStartLoading() {
@@ -64,6 +73,7 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
             MatrixCursor cursor = new MatrixCursor(mColumnNames);
             InputStream input = null;
             JsonReader reader = null;
+            listKotzones = new ArrayList<String[]>();
 
             // Haal data op van JSON URL
             try {
@@ -75,8 +85,6 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
 
                 while (reader.hasNext()) {
                     //reader.beginArray();
-
-                    String[] kotzones = new String[20];
 
                     while (reader.hasNext()) {
                         String name = reader.nextName();
@@ -104,7 +112,6 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
                                         else {
                                             reader.skipValue();
                                         }
-
                                     }
                                     else if (name2.equals("kotzone_na")) {
                                         kotzoneNaam = reader.nextString();
@@ -113,7 +120,16 @@ public class KotzonesLoader extends AsyncTaskLoader<Cursor> {
                                     else {
                                         reader.skipValue();
                                     }
+                                    // Controleer of de 3 waarden ingevuld zijn -> Valid object
+                                    if (id != 0 && !coordinaten.equals("") && !kotzoneNaam.equals("")) {
+                                        // Voeg de properties toe aan een object 'Kotzone' -> Voeg object toe aan lijst
+                                        String[] kotzone = new String[] {
+                                                String.valueOf(id), coordinaten, kotzoneNaam
+                                        };
+                                        listKotzones.add(kotzone);
+                                    }
                                 }
+
 
                                 // Maak matrixcursor rijen en vul deze op met properties van JSON data
                                 MatrixCursor.RowBuilder row = cursor.newRow();

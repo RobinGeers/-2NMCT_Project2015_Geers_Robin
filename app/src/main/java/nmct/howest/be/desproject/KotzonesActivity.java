@@ -24,7 +24,8 @@ import java.util.ArrayList;
 public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
     private TextView textViewResultaat, textViewLatitude, textViewLongtitude;
-    public static final String KOTZONE = "nmct.howest.be.desproject.bereik";
+    public static final String[] KOTZONE = new String[2];
+    public static final String EXTRA_ARRAY_GEKOZEN_KOTZONE = "";
     public static final LatLng DEINZE = new LatLng(50.988755, 3.5121499);
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -32,8 +33,8 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
     public LocationRequest mLocationRequest;
     private boolean mRequestingLocationUpdates = true;
     private ArrayList<double[]> listLocations = new ArrayList<>();
-    double[] coordinaten1 = { 1, 2 };
-    double[] coordinaten2 = { 3, 4 };
+    double[] coordinaten1 = {1, 2};
+    double[] coordinaten2 = {3, 4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +50,19 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         listLocations.add(1, coordinaten2);
 
 
-        // Haal gekozen bereik op
-        Intent intent = getIntent();
-        String kotzone = intent.getStringExtra(KOTZONE);
-        textViewResultaat.setText("Kotzone: " + String.valueOf(kotzone));
+        // Haal gekozen kotzone op
+        //Intent intent = getIntent();
+        Bundle args = this.getIntent().getExtras();
+        String[] gekozenKotzone = args.getStringArray(EXTRA_ARRAY_GEKOZEN_KOTZONE);
+
+        String kotZoneId = gekozenKotzone[0];
+        String kotzoneCoordinaten = gekozenKotzone[1];
+        String kotzoneNaam = gekozenKotzone[2];
+        textViewResultaat.setText("Kotzone: " + kotzoneNaam);
 
         // Maak instantie van Google Maps API
-       // buildGoogleApiClient();
-       // createLocationRequest();
+        // buildGoogleApiClient();
+        // createLocationRequest();
 
         // Haal map op
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -102,125 +108,12 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         }
 
         // Instellingen van de map
-        UiSettings settings =  googleMap.getUiSettings();
+        UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
         settings.setMyLocationButtonEnabled(true);
 
         // Zoom in met de camera
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEINZE, 5));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(12),2000, null);
-/*
-        // Cirkel pulse animatie
-        final Circle circle = googleMap.addCircle(new CircleOptions().center(DEINZE)
-                .strokeColor(Color.parseColor("#e74c3c")).radius(10000));
-
-        ValueAnimator vAnimator = new ValueAnimator();
-        vAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        vAnimator.setRepeatMode(ValueAnimator.RESTART);  /* Creëert een pulse effect */
-    /*    vAnimator.setIntValues(0, 100);
-        vAnimator.setDuration(4000);
-        vAnimator.setEvaluator(new IntEvaluator());
-        vAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        vAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float animatedFraction = valueAnimator.getAnimatedFraction();
-                circle.setRadius(animatedFraction * 100);
-            }
-        });
-        vAnimator.start();*/
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
     }
-/* Current location WERKT NIET
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mCurrentLocation != null) {
-            textViewLatitude.setText(String.valueOf(mCurrentLocation.getLatitude()));
-            textViewLongtitude.setText(String.valueOf(mCurrentLocation.getLongitude()));
-            startLocationUpdates();
-        }
-    }
-
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    protected void createLocationRequest() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mCurrentLocation = location;
-        updateUI();
-    }
-
-    private void updateUI() {
-        textViewLatitude.setText(String.valueOf(mCurrentLocation.getLatitude()));
-        textViewLongtitude.setText(String.valueOf(mCurrentLocation.getLongitude()));
-        //mLastUpdateTimeTextView.setText(mLastUpdateTime);
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
-    }
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, (com.google.android.gms.location.LocationListener) this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
-    }*/
 }

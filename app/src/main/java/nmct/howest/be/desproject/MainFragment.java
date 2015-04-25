@@ -18,7 +18,8 @@ public class MainFragment extends Fragment {
     private TextView textViewBereik;
     private Button buttonToonKoten, buttonKiesKotZone;
     private KotZoneListener Listener;
-    public static String EXTRA_KOTZONE = "nmct.howest.be.desproject.kotzone";
+    public static String EXTRA_KOTZONE;
+    private String[] gekozenKotzone;
 
 
     public MainFragment() {
@@ -44,6 +45,11 @@ public class MainFragment extends Fragment {
         buttonToonKoten = (Button) viewRange.findViewById(R.id.buttonToonKoten);
         buttonKiesKotZone = (Button) viewRange.findViewById(R.id.buttonKiesKotzone);
 
+
+        if (getArguments() != null) {
+            gekozenKotzone = getArguments().getStringArray(EXTRA_KOTZONE);
+        }
+
         // Button click events
         buttonKiesKotZone.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -54,15 +60,26 @@ public class MainFragment extends Fragment {
         buttonToonKoten.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Listener.onKotGekozen(EXTRA_KOTZONE);
+                Listener.onKotGekozen(gekozenKotzone);
             }
         });
 
         return viewRange;
     }
 
+    public static MainFragment newInstance(String[] kotzone) {
+        MainFragment fragment = new MainFragment();
+
+        // Steek ontvangen parameters in Bundle (mandje)
+        Bundle args = new Bundle();
+        args.putStringArray(EXTRA_KOTZONE, kotzone);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     public interface KotZoneListener {
         public void onKiesKot();
-        public void onKotGekozen(String kotzone);
+        public void onKotGekozen(String[] kotzone);
     }
 }

@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-public class MainActivity extends FragmentActivity implements MainFragment.KotZoneListener {
+public class MainActivity extends FragmentActivity implements MainFragment.KotZoneListener, SelecteerKotFragment.SelecteerKotzoneListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +77,28 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
     }
 
     @Override
-    public void onKotGekozen(String kotzone) {
+    public void onKotGekozen(String[] kotzone) {
         showMapFragment(kotzone);
     }
 
 
-    private void showMapFragment(String kotzone) {
+    private void showMapFragment(String[] kotzone) {
+        Bundle args = new Bundle();
+        args.putStringArray(KotzonesActivity.EXTRA_ARRAY_GEKOZEN_KOTZONE, kotzone);
         Intent intent = new Intent(MainActivity.this, KotzonesActivity.class);
-        intent.putExtra(KotzonesActivity.KOTZONE, kotzone);
+        intent.putExtras(args);
         startActivity(intent);
+    }
+
+    @Override
+    public void onGekozenKotzone(String[] kotzone) {
+        // Geef de geselecteerde kotzone door aan MainFragment
+        Fragment mainFragment = MainFragment.newInstance(kotzone);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.container, mainFragment);
+        fragmentTransaction.addToBackStack("SelecteerKotFragment");
+
+        fragmentTransaction.commit();
     }
 }

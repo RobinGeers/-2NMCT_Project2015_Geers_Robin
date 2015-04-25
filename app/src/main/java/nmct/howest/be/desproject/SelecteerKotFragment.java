@@ -44,6 +44,7 @@ public class SelecteerKotFragment extends ListFragment implements LoaderManager.
 
     private TextView textViewKotzoneNaam;
     private KotzonesAdapter mAdapter;
+    private SelecteerKotzoneListener Listener;
 
     public SelecteerKotFragment() {
         // Required empty public constructor
@@ -123,9 +124,36 @@ public class SelecteerKotFragment extends ListFragment implements LoaderManager.
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Controleren of Activity de Listener implementeerd
+        try {
+            Listener = (SelecteerKotzoneListener) activity;
+        }
+        catch (ClassCastException ex) {
+            throw new ClassCastException(activity.toString() + " must implement SelecteerKotzoneListener");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewKotzones = inflater.inflate(R.layout.fragment_selecteer_kot, container, false);
 
         return viewKotzones;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        // Geef geselecteerde kotzone mee aan MainActivity
+        String[] kotzone = KotzonesLoader.getListKotzones().get(position);
+        Listener.onGekozenKotzone(kotzone);
+
+    }
+
+    public interface SelecteerKotzoneListener {
+        public void onGekozenKotzone(String[] kotzone);
     }
 }
