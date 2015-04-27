@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 
-public class KotzonesActivity extends Activity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
+public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
     private TextView textViewResultaat;
     public static final String EXTRA_ARRAY_GEKOZEN_KOTZONE = "";
@@ -40,11 +40,6 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback, Go
     private GoogleMap googleMap;
     private ArrayList<double[]> listKotenLocaties = new ArrayList<>();
     private Button buttonBackKiesKotzone;
-    protected Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
-    private GoogleApiClient mGoogleApiClient;
-    private String address;
-    private boolean mAddressRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,35 +155,6 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback, Go
                 geefInfoAanActivity(marker);
             }
         });
-
-        // Zet Latitude en Longitude om naar een adres
-        startIntentService();
-
-        mAddressRequested = true;
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-
-        if (mLastLocation != null) {
-            // Determine whether a Geocoder is available.
-            if (!Geocoder.isPresent()) {
-                Toast.makeText(KotzonesActivity.this, "No geocoder available",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (mAddressRequested) {
-                startIntentService();
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
     }
 
     private void geefInfoAanActivity(Marker marker) {
@@ -202,34 +168,4 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback, Go
         setResult(RESULT_OK, intent);
         finish();
     }
-
-
-    protected void startIntentService() {
-        Intent intent = new Intent(KotzonesActivity.this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-        startService(intent);
-    }
-
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string
-            // or an error message sent from the intent service.
-            address = resultData.getString(Constants.RESULT_DATA_KEY);
-
-
-            // Show a toast message if an address was found.
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                Toast.makeText(KotzonesActivity.this, "Gelukt", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
 }

@@ -31,7 +31,6 @@ import java.util.Locale;
 public class KotzoneDetailsFragment extends Fragment {
 
     private TextView textViewDetailsAdres, textViewDetailsStad, textViewDetailsPostcode;
-    private Geocoder geocoder;
     private Button buttonBack;
     private List<Address> listAddressen;
 
@@ -72,9 +71,6 @@ public class KotzoneDetailsFragment extends Fragment {
                     openKotzonesActivity();
                 }
             });
-
-
-
         }
         return viewKotzoneDetails;
     }
