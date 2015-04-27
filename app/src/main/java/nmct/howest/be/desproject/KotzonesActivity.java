@@ -9,6 +9,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,15 +30,11 @@ import java.util.ArrayList;
 public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
     private TextView textViewResultaat;
-    public static final String[] KOTZONE = new String[2];
     public static final String EXTRA_ARRAY_GEKOZEN_KOTZONE = "";
     public static LatLng KOTZONE_LOCATIE = new LatLng(51.05434, 3.71742);
     private GoogleMap googleMap;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mCurrentLocation;
-    public LocationRequest mLocationRequest;
-    private boolean mRequestingLocationUpdates = true;
     private ArrayList<double[]> listKotenLocaties = new ArrayList<>();
+    private Button buttonBackKiesKotzone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +44,14 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
         // Koppel attribuut aan Control-View
         textViewResultaat = (TextView) findViewById(R.id.textViewBereikResultaat);
+        buttonBackKiesKotzone = (Button) findViewById(R.id.buttonBackKiesKotzone);
+
+        buttonBackKiesKotzone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMainFragment();
+            }
+        });
         ActionBar ab = getActionBar();
         ab.setTitle("Beschikbare studentenkoten");
 
@@ -90,6 +96,11 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
     }
 
+    private void openMainFragment() {
+        Intent intent = new Intent(KotzonesActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -130,7 +141,7 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
         // Zoom in met de camera
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(KOTZONE_LOCATIE, 5));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
 
         // Info Window click event
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {

@@ -31,8 +31,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bereik:"
+        android:text="Resultaat:"
         android:id="@+id/textViewBereikResultaat"
+        android:layout_alignBaseline="@+id/buttonBackKiesKotzone"
+        android:layout_alignBottom="@+id/buttonBackKiesKotzone"
+        android:layout_toEndOf="@+id/buttonBackKiesKotzone"
+        android:layout_marginStart="42dp"/>
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="35dp"
+        android:text="&lt; Kies kotzone"
+        android:id="@+id/buttonBackKiesKotzone"
+        android:background="#03A9F4"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 
