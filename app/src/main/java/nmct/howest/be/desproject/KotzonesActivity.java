@@ -5,16 +5,21 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -27,7 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 
-public class KotzonesActivity extends Activity implements OnMapReadyCallback {
+public class KotzonesActivity extends Activity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
 
     private TextView textViewResultaat;
     public static final String EXTRA_ARRAY_GEKOZEN_KOTZONE = "";
@@ -35,6 +40,11 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
     private GoogleMap googleMap;
     private ArrayList<double[]> listKotenLocaties = new ArrayList<>();
     private Button buttonBackKiesKotzone;
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
+    private GoogleApiClient mGoogleApiClient;
+    private String address;
+    private boolean mAddressRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +160,35 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
                 geefInfoAanActivity(marker);
             }
         });
+
+        // Zet Latitude en Longitude om naar een adres
+        startIntentService();
+
+        mAddressRequested = true;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            // Determine whether a Geocoder is available.
+            if (!Geocoder.isPresent()) {
+                Toast.makeText(KotzonesActivity.this, "No geocoder available",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (mAddressRequested) {
+                startIntentService();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 
     private void geefInfoAanActivity(Marker marker) {
@@ -162,6 +201,35 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         intent.putExtra(MainActivity.GESELECTEERD_KOT_LONGITUDE, positie.longitude);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+
+    protected void startIntentService() {
+        Intent intent = new Intent(KotzonesActivity.this, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        startService(intent);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            address = resultData.getString(Constants.RESULT_DATA_KEY);
+
+
+            // Show a toast message if an address was found.
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                Toast.makeText(KotzonesActivity.this, "Gelukt", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
 }

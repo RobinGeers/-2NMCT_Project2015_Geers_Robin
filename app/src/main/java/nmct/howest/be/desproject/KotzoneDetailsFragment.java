@@ -5,8 +5,11 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -29,15 +35,18 @@ public class KotzoneDetailsFragment extends Fragment {
     private Button buttonBack;
     private List<Address> listAddressen;
 
-
     public static final String EXTRA_MARKER_LATITUDE = "";
     public static final String EXTRA_MARKER_LONGITUDE = "";
     public static String EXTRA_GEKOZEN_KOTZONE;
+    public static double EXTRA_LATITUDE = 0;
+    public static double EXTRA_LONGITUDE = 0;
+
 
 
     public KotzoneDetailsFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,22 +63,8 @@ public class KotzoneDetailsFragment extends Fragment {
         if (getArguments() != null) {
             double latitude = getArguments().getDouble(EXTRA_MARKER_LATITUDE);
             double longitude = getArguments().getDouble(EXTRA_MARKER_LONGITUDE);
-            geocoder = new Geocoder(getActivity(), Locale.getDefault());
-           /* try {
-                listAddressen = geocoder.getFromLocation(latitude, longitude, 3);
-
-                // Haal info op van locatie
-                String adres = listAddressen.get(0).getAddressLine(0);
-                String stad = listAddressen.get(0).getLocality();
-                String postcode = listAddressen.get(0).getPostalCode();
-
-                // Vul info in TextViews
-                textViewDetailsAdres.setText(adres);
-                textViewDetailsStad.setText(stad);
-                textViewDetailsPostcode.setText(postcode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+            EXTRA_LATITUDE = latitude;
+            EXTRA_LONGITUDE = longitude;
 
             buttonBack.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,6 +72,8 @@ public class KotzoneDetailsFragment extends Fragment {
                     openKotzonesActivity();
                 }
             });
+
+
 
         }
         return viewKotzoneDetails;
