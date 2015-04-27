@@ -16,7 +16,7 @@ public class MainFragment extends Fragment {
 
 
     private SeekBar seekBarBereik;
-    private TextView textViewGekozenKotzone;
+    private TextView textViewBereik;
     private Button buttonToonKoten, buttonKiesKotZone;
     private KotZoneListener Listener;
     public static String EXTRA_KOTZONE;
@@ -45,15 +45,12 @@ public class MainFragment extends Fragment {
 
         buttonToonKoten = (Button) viewRange.findViewById(R.id.buttonToonKoten);
         buttonKiesKotZone = (Button) viewRange.findViewById(R.id.buttonKiesKotzone);
-        textViewGekozenKotzone = (TextView) viewRange.findViewById(R.id.textViewGekozenKotzone);
 
         ActionBar ab = getActivity().getActionBar();
         ab.setTitle("KotGent");
 
         if (getArguments() != null) {
             gekozenKotzone = getArguments().getStringArray(EXTRA_KOTZONE);
-            String kotzone = gekozenKotzone[2];
-            textViewGekozenKotzone.setText("Gekozen kotzone: " + kotzone);
         }
 
         // Button click events
