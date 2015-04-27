@@ -1,6 +1,7 @@
 package nmct.howest.be.desproject;
 
 
+import android.app.ActionBar;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -42,6 +43,9 @@ public class KotzoneDetailsFragment extends Fragment {
         textViewDetailsAdres = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsAdres);
         textViewDetailsStad = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsStad);
         textViewDetailsPostcode = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsPostcode);
+
+        ActionBar ab = getActivity().getActionBar();
+        ab.setTitle("Details studentenkot");
 
         if (getArguments() != null) {
             double latitude = getArguments().getDouble(EXTRA_MARKER_LATITUDE);

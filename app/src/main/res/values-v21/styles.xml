@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#2196F3</color>
+    <color name="text_color_primary">#FFFFFF</color>
+    <color name="window_background">#FFFFFF</color>
+    <color name="color_secondary">#727272</color>
+
+    <style name="MyAppTheme" parent="android:Theme.Material.Light">
+        <item name="android:colorPrimaryDark">@color/primary</item>
+        <item name="android:colorPrimary">@color/primary_dark</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:windowBackground">@color/window_background</item>
     </style>
 </resources>

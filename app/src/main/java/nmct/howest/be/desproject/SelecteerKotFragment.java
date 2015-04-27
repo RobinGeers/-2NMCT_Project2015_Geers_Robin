@@ -1,6 +1,7 @@
 package nmct.howest.be.desproject;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -140,6 +141,8 @@ public class SelecteerKotFragment extends ListFragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewKotzones = inflater.inflate(R.layout.fragment_selecteer_kot, container, false);
 
+        ActionBar ab = getActivity().getActionBar();
+        ab.setTitle("Kotzones Gent");
         return viewKotzones;
     }
 

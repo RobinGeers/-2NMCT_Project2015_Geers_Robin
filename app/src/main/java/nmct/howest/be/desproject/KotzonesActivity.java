@@ -1,5 +1,6 @@
 package nmct.howest.be.desproject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -45,6 +46,8 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
         // Koppel attribuut aan Control-View
         textViewResultaat = (TextView) findViewById(R.id.textViewBereikResultaat);
+        ActionBar ab = getActionBar();
+        ab.setTitle("Beschikbare studentenkoten");
 
         // Haal gekozen kotzone op
         Bundle args = this.getIntent().getExtras();

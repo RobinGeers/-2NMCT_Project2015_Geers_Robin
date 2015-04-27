@@ -18,23 +18,63 @@
         android:layout_height="wrap_content"
         android:text="Bekijk studentenkoten"
         android:id="@+id/buttonToonKoten"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="#03A9F4"
+        android:layout_alignParentEnd="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kies je kotzone:"
+        android:text="Welkom bij KotGent"
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp"/>
+        android:textSize="32sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/textViewBereik"
+        android:layout_centerHorizontal="true"
+        android:textColor="#212121"/>
 
     <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Kies kotzone"
+        android:id="@+id/buttonKiesKotzone"
+        android:background="#03A9F4"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="14dp"
+        android:layout_alignEnd="@+id/textView2"/>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageView"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/gent"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kies je kotzone"
-        android:id="@+id/buttonKiesKotzone"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"/>
+        android:text="Kies eerst je kotzone"
+        android:id="@+id/textView2"
+        android:textSize="20sp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignEnd="@+id/textViewBereik"
+        android:layout_marginTop="37dp"
+        android:textColor="#727272"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bekijk daarna de beschikbare koten"
+        android:id="@+id/textView3"
+        android:textSize="20sp"
+        android:textColor="#727272"
+        android:layout_marginBottom="26dp"
+        android:layout_above="@+id/buttonToonKoten"
+        android:layout_alignStart="@+id/buttonKiesKotzone"/>
+
 </RelativeLayout>

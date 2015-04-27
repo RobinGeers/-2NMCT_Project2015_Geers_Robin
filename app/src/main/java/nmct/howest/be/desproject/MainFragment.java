@@ -1,6 +1,7 @@
 package nmct.howest.be.desproject;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -45,6 +46,8 @@ public class MainFragment extends Fragment {
         buttonToonKoten = (Button) viewRange.findViewById(R.id.buttonToonKoten);
         buttonKiesKotZone = (Button) viewRange.findViewById(R.id.buttonKiesKotzone);
 
+        ActionBar ab = getActivity().getActionBar();
+        ab.setTitle("KotGent");
 
         if (getArguments() != null) {
             gekozenKotzone = getArguments().getStringArray(EXTRA_KOTZONE);
