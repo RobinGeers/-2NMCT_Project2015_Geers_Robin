@@ -11,9 +11,10 @@
         android:layout_height="wrap_content"
         android:text="Adres"
         android:id="@+id/textViewDetailsAdres"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp"/>
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -40,5 +41,15 @@
             android:layout_below="@+id/textViewDetailsAdres"
             android:layout_toEndOf="@+id/linearLayout"/>
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="&lt; Kies kot"
+        android:id="@+id/buttonBack"
+        android:background="#03A9F4"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="3dp"/>
 
 </RelativeLayout>

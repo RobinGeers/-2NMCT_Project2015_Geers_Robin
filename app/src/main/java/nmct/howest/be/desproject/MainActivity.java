@@ -34,6 +34,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
     private final int REQUEST_CODE_POSITION = 1;
     public static final String GESELECTEERD_KOT_LATITUDE = "nmct.howest.be.desproject.latitude";
     public static final String GESELECTEERD_KOT_LONGITUDE = "nmct.howest.be.desproject.longitude";
+    public static String[] GEKOZEN_KOTZONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
 
 
     private void showMapFragment(String[] kotzone) {
+        GEKOZEN_KOTZONE = kotzone;
         Bundle args = new Bundle();
         args.putStringArray(KotzonesActivity.EXTRA_ARRAY_GEKOZEN_KOTZONE, kotzone);
         Intent intent = new Intent(MainActivity.this, KotzonesActivity.class);
@@ -117,7 +119,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
     }
 
     private void showKotzoneDetailsFragment(double latitude, double longitude) {
-        Fragment detailsFragment = KotzoneDetailsFragment.newInstance(latitude, longitude);
+        Fragment detailsFragment = KotzoneDetailsFragment.newInstance(latitude, longitude, GEKOZEN_KOTZONE);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
         fragmentTransaction.replace(R.id.container, detailsFragment);
