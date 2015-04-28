@@ -64,41 +64,46 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         Bundle args = this.getIntent().getExtras();
         String[] gekozenKotzone = args.getStringArray(EXTRA_ARRAY_GEKOZEN_KOTZONE);
 
-        // Vul properties in variabelen
-        String kotZoneId = gekozenKotzone[0];
-        String kotzoneCoordinaten = gekozenKotzone[1];
-        String kotzoneNaam = gekozenKotzone[2];
+        if (gekozenKotzone != null) {
+            // Vul properties in variabelen
+            String kotZoneId = gekozenKotzone[0];
+            String kotzoneCoordinaten = gekozenKotzone[1];
+            String kotzoneNaam = gekozenKotzone[2];
 
-        // Splits coordinaten en vul ze in een lijst
-        String[] coordinatenGesplitst = kotzoneCoordinaten.split(",0");
-        int coordinatenCount = coordinatenGesplitst.length;
+            // Splits coordinaten en vul ze in een lijst
+            String[] coordinatenGesplitst = kotzoneCoordinaten.split(",0");
+            int coordinatenCount = coordinatenGesplitst.length;
 
-        for (int i = 0; i < coordinatenCount -1; i++) {
-            String[] coordinaten = kotzoneCoordinaten.split(",0");
-            String coordinaat = coordinaten[i];
+            for (int i = 0; i < coordinatenCount - 1; i++) {
+                String[] coordinaten = kotzoneCoordinaten.split(",0");
+                String coordinaat = coordinaten[i];
 
-            String[] coordinaatGesplitst = coordinaat.split(",");
+                String[] coordinaatGesplitst = coordinaat.split(",");
 
-            double dLatidude = Double.parseDouble(coordinaatGesplitst[1]);
-            double dLongitude = Double.parseDouble(coordinaatGesplitst[0]);
+                double dLatidude = Double.parseDouble(coordinaatGesplitst[1]);
+                double dLongitude = Double.parseDouble(coordinaatGesplitst[0]);
 
-            double[] beideCoordinaten = new double[] {
-                    dLatidude, dLongitude
-            };
-            listKotenLocaties.add(beideCoordinaten);
+                double[] beideCoordinaten = new double[]{
+                        dLatidude, dLongitude
+                };
+                listKotenLocaties.add(beideCoordinaten);
+            }
+
+            double latitude = listKotenLocaties.get(0)[0];
+            double longitude = listKotenLocaties.get(0)[1];
+
+            KOTZONE_LOCATIE = new LatLng(latitude, longitude);
+
+            // Toon properties van kotzone
+            textViewResultaat.setText("Kotzone: " + kotzoneNaam);
+
+            // Haal map op
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
         }
-
-        double latitude = listKotenLocaties.get(0)[0];
-        double longitude = listKotenLocaties.get(0)[1];
-
-        KOTZONE_LOCATIE = new LatLng(latitude, longitude);
-
-        // Toon properties van kotzone
-        textViewResultaat.setText("Kotzone: " + kotzoneNaam);
-
-        // Haal map op
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        else {
+            Toast.makeText(KotzonesActivity.this, "Selecteer eerst een kotzone", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openMainFragment() {
@@ -135,7 +140,7 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
             LatLng pos = new LatLng(listKotenLocaties.get(i)[0], listKotenLocaties.get(i)[1]);
             googleMap.addMarker(new MarkerOptions()
                     .position(pos)
-                    .title("Klik voor meer info"));
+                    .title("Meer info"));
                     //.title("Latitude: " + String.valueOf(listKotenLocaties.get(i)[0] + "Longtitude: " + listKotenLocaties.get(i)[1])));
         }
 
