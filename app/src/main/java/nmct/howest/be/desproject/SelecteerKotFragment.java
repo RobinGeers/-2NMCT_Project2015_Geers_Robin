@@ -147,12 +147,22 @@ public class SelecteerKotFragment extends ListFragment implements LoaderManager.
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onListItemClick(ListView listView, View v, int position, long id) {
+        super.onListItemClick(listView, v, position, id);
+
+        // Vraag cursor op van Adapter -> Ga naar de rij waar op geklikt is
+        Cursor c = ((SimpleCursorAdapter)listView.getAdapter()).getCursor();
+        c.moveToPosition(position);
+
+        // Haal properties uit de rij -> Steek ze in array van Strings
+        String coords = c.getString(1);
+        String kotzoneNaam = c.getString(2);
+        String[] gekozenKotzone = new String[] {
+                String.valueOf(id), coords, kotzoneNaam
+        };
 
         // Geef geselecteerde kotzone mee aan MainActivity
-        String[] kotzone = KotzonesLoader.getListKotzones().get(position);
-        Listener.onGekozenKotzone(kotzone);
+        Listener.onGekozenKotzone(gekozenKotzone);
 
     }
 

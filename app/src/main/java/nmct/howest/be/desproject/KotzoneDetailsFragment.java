@@ -2,8 +2,10 @@ package nmct.howest.be.desproject;
 
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,11 +14,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class KotzoneDetailsFragment extends Fragment {
 
-    private TextView textViewLatitude, textViewLongitude;
+    private TextView textViewDetailsStraat, textViewDetailsStad, textViewDetailsLand;
     private Button buttonBack;
     private List<Address> listAddressen;
 
@@ -35,8 +41,9 @@ public class KotzoneDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewKotzoneDetails = inflater.inflate(R.layout.fragment_kotzone_details, container, false);
 
-        textViewLatitude = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsLatitude);
-        textViewLongitude = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsLongitude);
+        textViewDetailsStraat = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsStraat);
+        textViewDetailsStad = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsStad);
+        textViewDetailsLand = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsLand);
 
         buttonBack = (Button) viewKotzoneDetails.findViewById(R.id.buttonBack);
 
@@ -46,17 +53,48 @@ public class KotzoneDetailsFragment extends Fragment {
         if (getArguments() != null) {
             double latitude = getArguments().getDouble(EXTRA_MARKER_LATITUDE);
             double longitude = getArguments().getDouble(EXTRA_MARKER_LONGITUDE);
-            textViewLatitude.setText("Latitude: " + latitude);
-            textViewLongitude.setText("Longitude: " + longitude);
 
-            buttonBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openKotzonesActivity();
-                }
-            });
+
+            LatLng locatie = new LatLng(latitude, longitude);
+            try {
+                String[] adres = getLocation(locatie);
+                String straat = adres[0];
+                String stad = adres[1];
+                String land = adres[2];
+
+                textViewDetailsStraat.setText(straat);
+                textViewDetailsStad.setText(stad);
+                textViewDetailsLand.setText(land);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openKotzonesActivity();
+            }
+        });
+
         return viewKotzoneDetails;
+    }
+
+    public String[] getLocation(LatLng latlng) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        Context context;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        addresses = geocoder.getFromLocation(latlng.latitude,latlng.longitude,1);
+
+        String[] arr = new String[4];
+
+        arr[0] = addresses.get(0).getAddressLine(0); // Straat + nr
+        arr[1] = addresses.get(0).getAddressLine(1); // Postcode + stad
+        arr[2] = addresses.get(0).getAddressLine(2); // Land
+        return arr;
     }
 
     private void openKotzonesActivity() {

@@ -41,10 +41,9 @@
         android:text="Kies kotzone"
         android:id="@+id/buttonKiesKotzone"
         android:background="#03A9F4"
+        android:layout_marginTop="32dp"
         android:layout_below="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="14dp"
-        android:layout_alignEnd="@+id/textView2"/>
+        android:layout_alignStart="@+id/textView2"/>
 
     <ImageView
         android:layout_width="150dp"
@@ -75,6 +74,13 @@
         android:textColor="#727272"
         android:layout_marginBottom="26dp"
         android:layout_above="@+id/buttonToonKoten"
+        android:layout_alignStart="@+id/buttonKiesKotzone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewGekozenKotzone"
+        android:layout_below="@+id/textView2"
         android:layout_alignStart="@+id/buttonKiesKotzone"/>
 
 </RelativeLayout>
