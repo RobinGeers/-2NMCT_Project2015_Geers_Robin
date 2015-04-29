@@ -3,6 +3,7 @@ package nmct.howest.be.desproject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,6 +47,8 @@ public class MainFragment extends Fragment {
         buttonToonKoten = (Button) viewRange.findViewById(R.id.buttonToonKoten);
         buttonKiesKotZone = (Button) viewRange.findViewById(R.id.buttonKiesKotzone);
         textViewGekozenKotzone = (TextView) viewRange.findViewById(R.id.textViewGekozenKotzone);
+        buttonToonKoten.setEnabled(false);
+        buttonToonKoten.setBackgroundColor(Color.GRAY);
 
         ActionBar ab = getActivity().getActionBar();
         ab.setTitle("KotGent");
@@ -54,6 +57,8 @@ public class MainFragment extends Fragment {
             gekozenKotzone = getArguments().getStringArray(EXTRA_KOTZONE);
             String kotzoneNaam = gekozenKotzone[2];
             textViewGekozenKotzone.setText("Gekozen kotzone: " + kotzoneNaam);
+            buttonToonKoten.setEnabled(true);
+            buttonToonKoten.setBackgroundColor(Color.parseColor("#03A9F4"));
         }
 
         // Button click events
