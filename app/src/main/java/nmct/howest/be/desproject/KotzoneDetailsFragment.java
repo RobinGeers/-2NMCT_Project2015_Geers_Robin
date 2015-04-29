@@ -23,7 +23,7 @@ import java.util.Locale;
 public class KotzoneDetailsFragment extends Fragment {
 
     private TextView textViewDetailsStraat, textViewDetailsStad, textViewDetailsLand;
-    private Button buttonBack;
+    //private Button buttonBack;
     private List<Address> listAddressen;
 
     public static final String EXTRA_MARKER_LATITUDE = "latitude";
@@ -45,7 +45,7 @@ public class KotzoneDetailsFragment extends Fragment {
         textViewDetailsStad = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsStad);
         textViewDetailsLand = (TextView) viewKotzoneDetails.findViewById(R.id.textViewDetailsLand);
 
-        buttonBack = (Button) viewKotzoneDetails.findViewById(R.id.buttonBack);
+       // buttonBack = (Button) viewKotzoneDetails.findViewById(R.id.buttonBack);
 
         ActionBar ab = getActivity().getActionBar();
         ab.setTitle("Details studentenkot");
@@ -72,12 +72,12 @@ public class KotzoneDetailsFragment extends Fragment {
 
         }
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
+       /* buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openKotzonesActivity();
             }
-        });
+        });*/
 
         return viewKotzoneDetails;
     }
@@ -104,6 +104,7 @@ public class KotzoneDetailsFragment extends Fragment {
         args.putStringArray(KotzonesActivity.EXTRA_ARRAY_GEKOZEN_KOTZONE, gekozenKotzone);
         Intent intent = new Intent(getActivity(), KotzonesActivity.class);
         intent.putExtras(args);
+
         startActivity(intent);
     }
 

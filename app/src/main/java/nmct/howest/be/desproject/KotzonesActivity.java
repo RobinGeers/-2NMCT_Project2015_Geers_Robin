@@ -39,7 +39,7 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
     public static LatLng KOTZONE_LOCATIE = new LatLng(51.05434, 3.71742);
     private GoogleMap googleMap;
     private ArrayList<double[]> listKotenLocaties = new ArrayList<>();
-    private Button buttonBackKiesKotzone;
+    //private Button buttonBackKiesKotzone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +49,14 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
 
         // Koppel attribuut aan Control-View
         textViewResultaat = (TextView) findViewById(R.id.textViewBereikResultaat);
-        buttonBackKiesKotzone = (Button) findViewById(R.id.buttonBackKiesKotzone);
+        //buttonBackKiesKotzone = (Button) findViewById(R.id.buttonBackKiesKotzone);
 
-        buttonBackKiesKotzone.setOnClickListener(new View.OnClickListener() {
+        /*buttonBackKiesKotzone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openMainFragment();
             }
-        });
+        });*/
         ActionBar ab = getActionBar();
         ab.setTitle("Beschikbare studentenkoten");
 
@@ -157,12 +157,13 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                geefInfoAanActivity(marker);
+                //geefInfoAanActivity(marker);
+                showKotzoneDetailsFragment(marker.getPosition().latitude, marker.getPosition().longitude);
             }
         });
     }
 
-    private void geefInfoAanActivity(Marker marker) {
+    /*private void geefInfoAanActivity(Marker marker) {
         // Positie van de geselecteerde marker
         LatLng positie = marker.getPosition();
 
@@ -172,5 +173,23 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
         intent.putExtra(MainActivity.GESELECTEERD_KOT_LONGITUDE, positie.longitude);
         setResult(RESULT_OK, intent);
         finish();
+    }*/
+
+    private void showKotzoneDetailsFragment(double latitude, double longitude) {
+        Fragment detailsFragment = KotzoneDetailsFragment.newInstance(latitude, longitude, MainActivity.GEKOZEN_KOTZONE);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.add(R.id.containerMaps, detailsFragment);
+        fragmentTransaction.addToBackStack("KotzonesActivity");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

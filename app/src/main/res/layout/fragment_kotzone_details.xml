@@ -2,11 +2,12 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="nmct.howest.be.desproject.KotzoneDetailsFragment">
+             tools:context="nmct.howest.be.desproject.KotzoneDetailsFragment"
+             android:background="@color/window_background">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:text="&lt; Kies kot"
@@ -14,7 +15,7 @@
         android:background="#03A9F4"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="3dp"/>
+        android:layout_margin="3dp"/>!-->
 
     <LinearLayout
         android:orientation="vertical"

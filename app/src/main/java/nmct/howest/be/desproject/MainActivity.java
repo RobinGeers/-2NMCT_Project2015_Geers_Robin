@@ -106,7 +106,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
         switch (requestCode) {
             case REQUEST_CODE_POSITION:
                 switch (resultCode) {// Welk antwoord (result) hebben we gekregen?
-                    case RESULT_CANCELED: Toast.makeText(MainActivity.this, "Er was geen kot geselecteerd", Toast.LENGTH_SHORT).show();
+                    case RESULT_CANCELED: //Toast.makeText(MainActivity.this, "Er was geen kot geselecteerd", Toast.LENGTH_SHORT).show();
                         break;
                     case RESULT_OK:
                         double latitude = data.getDoubleExtra(GESELECTEERD_KOT_LATITUDE, 0);
