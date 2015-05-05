@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.KotZo
         args.putStringArray(KotzonesActivity.EXTRA_ARRAY_GEKOZEN_KOTZONE, kotzone);
         Intent intent = new Intent(MainActivity.this, KotzonesActivity.class);
         intent.putExtras(args);
-        startActivityForResult(intent, REQUEST_CODE_POSITION);
+        startActivity(intent);
     }
 
     @Override

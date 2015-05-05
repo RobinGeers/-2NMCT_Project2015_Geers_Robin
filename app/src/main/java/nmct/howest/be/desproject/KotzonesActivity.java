@@ -141,13 +141,12 @@ public class KotzonesActivity extends Activity implements OnMapReadyCallback {
             googleMap.addMarker(new MarkerOptions()
                     .position(pos)
                     .title("Meer info"));
-                    //.title("Latitude: " + String.valueOf(listKotenLocaties.get(i)[0] + "Longtitude: " + listKotenLocaties.get(i)[1])));
         }
 
         // Instellingen van de map
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
-        settings.setMyLocationButtonEnabled(true);
+        //settings.setMyLocationButtonEnabled(true);
 
         // Zoom in met de camera
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(KOTZONE_LOCATIE, 5));
